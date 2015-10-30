@@ -23,7 +23,7 @@ class Badge extends CI_Controller {
 	 * @see http://codeigniter.com/user_guide/general/urls.html
 	 */
 	public function index(){
-		header("location: " . site_url() . "/badge/generate_one/001");
+		header("location: " . site_url() . "/badge/generate_all");
 	}
 
 	public function generate_one($attendee_id){
@@ -41,6 +41,6 @@ class Badge extends CI_Controller {
 		foreach($all_IDs AS $an_ID){
 			$this->generate_one($an_ID);
 		}
-		echo "Generated " . count($all_IDs) . " badges <br />\n";
+		echo "<h1>Generated " . count($all_IDs) . " badges <br /></h1>\n";
 	}
 }

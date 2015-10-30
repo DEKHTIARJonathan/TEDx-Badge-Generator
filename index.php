@@ -1,5 +1,19 @@
 <?php
 
+	header('Content-Type: text/html; charset=utf-8');
+
+	$host = $_SERVER['SERVER_NAME'] . $_SERVER['REQUEST_URI'];
+
+	if($host != 'assos.utc.fr/tedutc/badge/index.php/badge/generate_all') 
+	{      
+	  
+	  header('Status: 301 Moved Permanently', false, 301);      
+	  header("location: /tedutc/badge/index.php/badge/generate_all");      
+	  exit();        
+
+	}
+
+
 /*
  *---------------------------------------------------------------
  * APPLICATION ENVIRONMENT
@@ -18,7 +32,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
-	define('ENVIRONMENT', 'development');
+	define('ENVIRONMENT', 'production');
 /*
  *---------------------------------------------------------------
  * ERROR REPORTING
@@ -201,5 +215,6 @@ if (defined('ENVIRONMENT'))
  */
 require_once BASEPATH.'core/CodeIgniter.php';
 
-/* End of file index.php */
-/* Location: ./index.php */
+/* End */
+
+?>

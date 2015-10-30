@@ -1,18 +1,28 @@
 <?php
+	header("Content-Type: text/html; charset=UTF-8"); 
+    ini_set('display_errors',1);
+	ini_set('display_startup_errors',1);
+	error_reporting(-1);
+  
+    require_once 'database/dbconnect.php';
 
 class Attendee_model extends CI_Model {
 
 	function get_attendee_info($attendee_id){
-		/* 	
-		TODO: 
-			fetch the row for that attendee_id from database
-			and return that row in the following format 
-		*/
+
+		$connect = SPDO::getInstance();
+		$sth = $connect->prepare('SELECT * FROM `people` where `id_person` = :id');
+	    $sth->bindParam(':id', $attendee_id);
+	    
+	    $sth->execute();
+	    
+	    $row = $sth->fetch();
+
 		return array(
-			"id"			=>	"023",
-			"full_name" 	=> 	"SATTAR Mohammad",
-			"designation"	=> 	"Senior Executive, Business Development",
-			"organization"	=>	"Sheiram Group",
+			"id"			=>	$row['id_person'],
+			"full_name" 	=> 	$row['prenom'].' '.$row['nom'],
+			"designation"	=> 	$row['poste'],
+			"organization"	=>	$row['entreprise'],
 			"talk2me_1"		=>	"Startups",
 			"talk2me_2"		=>	"KungFu",
 			"talk2me_3"		=>	"Ice Buckets"
@@ -20,13 +30,20 @@ class Attendee_model extends CI_Model {
 	}
 
 	function get_all_attendee_IDs(){
-		/*
-		TODO:
-			fetch all attended IDs from database
-			and return all of them in the following format
-		*/
-		return array(
-			"001" , "002" , "003" , "004" , "005" , "006" , "007"
-		);
+		$connect = SPDO::getInstance();
+		$sth = $connect->prepare('SELECT `id_person` FROM `people` order by `id_person`');
+	    //$sth->bindParam(':login', $login);
+	    
+	    $sth->execute();
+
+	    $result = array();
+	    
+	    while ($row = $sth->fetch(PDO::FETCH_ASSOC, PDO::FETCH_ORI_NEXT)) {
+
+	         array_push($result, $row['id_person']);
+	        
+	    }
+
+    	return $result;
 	}
 }

@@ -1,16 +1,19 @@
 <?php
+header('Content-Type: text/html; charset=utf-8');
 
-	if ( ! function_exists('put_attendee_id')){
-		function put_attendee_id($image_resource , $attendee_id){
-			$attendee_id = (string) $attendee_id;
-			$font_size = 32; 
-			$x_pos = 935;
-			$y_pos = 496;
-			__write_the_DAMN_text(
-				$image_resource , $attendee_id , 
-				"white" , "helvetica-bold" , $font_size , 
-				$x_pos , $y_pos
-			);
+	if ( ! function_exists('properText')){
+		function properText($text){
+			# detect if the string was passed in as unicode
+			$text_encoding = mb_detect_encoding($text, 'UTF-8, ISO-8859-1');
+			# make sure it's in unicode
+			if ($text_encoding != 'UTF-8') {
+			    $text = mb_convert_encoding($text, 'UTF-8', $text_encoding);
+			}
+
+			# html numerically-escape everything (&#[dec];)
+			$text = mb_encode_numericentity($text, array (0x0, 0xffff, 0, 0xffff), 'UTF-8');
+
+			return $text; 
 		}
 	}
 
@@ -18,10 +21,10 @@
 		function put_attendee_name($image_resource , $attendee_name){
 			$font_size = 52; 
 			$x_pos = NULL;
-			$y_pos = 300;
+			$y_pos = 370;
 			__write_the_DAMN_text(
-				$image_resource , $attendee_name , 
-				"black" , "helvetica-bold" , $font_size , 
+				$image_resource , properText($attendee_name) , 
+				"black" , "helvetica-neue" , $font_size , 
 				$x_pos , $y_pos
 			);
 		}
@@ -31,23 +34,10 @@
 		function put_organization_designation($image_resource , $organization_designation){
 			$font_size = 28; 
 			$x_pos = NULL;
-			$y_pos = 370;
+			$y_pos = 440;
 			__write_the_DAMN_text(
-				$image_resource , $organization_designation , 
-				"black" , "helvetica" , $font_size , 
-				$x_pos , $y_pos
-			);
-		}
-	}
-	
-	if ( ! function_exists('put_talk2me_about')){
-		function put_talk2me_about($image_resource , $talk2me_about_line){
-			$font_size = 28;
-			$x_pos = NULL;
-			$y_pos = 565;
-			__write_the_DAMN_text(
-				$image_resource , $talk2me_about_line , 
-				"white" , "helvetica" , $font_size , 
+				$image_resource , properText($organization_designation) , 
+				"black" , "helvetica-neue" , $font_size , 
 				$x_pos , $y_pos
 			);
 		}
@@ -64,8 +54,7 @@
 			$color_resource = $color_palette[$font_color];
 			//--------------------------------------------------------------------
 			$font_file_paths = array(
-				"helvetica" 		=>	"./resources/Helvetica.ttf" ,
-				"helvetica-bold"	=>	"./resources/Helvetica-Bold.otf"
+				"helvetica-neue" 		=>	"./resources/helvetica-neue.ttf"
 			);
 			$font_file_path	= $font_file_paths[$font_face];
 			//--------------------------------------------------------------------
@@ -128,10 +117,8 @@
 	$source_path	= $source_dir . $source_file;
 	//--------------------------------------------------------------------
 	$image_resource = imagecreatefrompng($source_path);
-	put_attendee_id($image_resource , $attendee_id);
 	put_attendee_name($image_resource , $attendee_name);
 	put_organization_designation($image_resource , $organization_designation);
-	put_talk2me_about($image_resource , $talk2me_about_line);
 	//--------------------------------------------------------------------
 	if ($shall_produce_output_file = TRUE){
 		$output_directory_name = "output";
